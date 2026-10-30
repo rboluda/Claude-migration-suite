@@ -1,0 +1,32 @@
+<Window
+    x:Class="Migrador.App.Views.SettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:l="clr-namespace:Migrador.App.Controls"
+    Title="{l:T 'Ajustes'}"
+    Width="520" SizeToContent="Height" ResizeMode="NoResize"
+    WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <StackPanel Margin="24">
+        <TextBlock Style="{StaticResource Subheading}" Margin="0,0,0,6" Text="Idioma · Language" />
+        <ComboBox ItemsSource="{Binding Languages}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding Language}" />
+        <TextBlock Margin="0,6,0,0" Style="{StaticResource Muted}" Text="{Binding RestartNotice}"
+                   Visibility="{Binding NeedsRestart, Converter={StaticResource BoolToVisibility}}" />
+
+        <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Actualizaciones'}" />
+        <CheckBox Content="{l:T 'Buscar actualizaciones automáticamente (una vez al día)'}" IsChecked="{Binding CheckUpdates}" />
+        <CheckBox Margin="0,6,0,0" Content="{l:T 'Instalarlas sin preguntar al cerrar Migrador'}" IsChecked="{Binding InstallUpdates}"
+                  IsEnabled="{Binding CheckUpdates}" />
+        <TextBlock Margin="0,6,0,0" Style="{StaticResource Muted}"
+                   Text="{l:T 'Solo se consulta GitHub; no se envía nada tuyo. Cada versión se comprueba con su SHA-256 antes de instalarla.'}" />
+        <TextBlock Margin="0,6,0,0" Style="{StaticResource Muted}"
+                   Text="{l:T 'Esta copia no puede actualizarse sola: no es el ejecutable publicado o su carpeta no admite escritura. Te avisará cuando haya una versión nueva.'}"
+                   Visibility="{Binding CannotSelfUpdate, Converter={StaticResource BoolToVisibility}}" />
+        <TextBlock Margin="0,6,0,0" Style="{StaticResource Muted}" Text="{Binding Version}" />
+
+        <StackPanel Margin="0,24,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button MinWidth="96" IsDefault="True" Content="{l:T 'Guardar'}"
+                    Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Button MinWidth="96" Margin="8,0,0,0" IsCancel="True" Content="{l:T 'Cancelar'}" />
+        </StackPanel>
+    </StackPanel>
+</Window>

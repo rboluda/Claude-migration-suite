@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>Migrador</AssemblyName>
+    <RootNamespace>Migrador.App</RootNamespace>
+    <AssemblyTitle>Migrador</AssemblyTitle>
+    <Description>Archiva todo el contenido de una cuenta en un paquete .clo sin pérdidas y lo prepara para otra cuenta.</Description>
+    <!-- Tema Fluent de WPF (ThemeMode): aún marcado como experimental. -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+    <SatelliteResourceLanguages>es;en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <!-- Para usuarios finales: un único .exe autocontenido (no requiere instalar .NET). -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Migrador.ClaudeCode\Migrador.ClaudeCode.csproj" />
+    <ProjectReference Include="..\Migrador.Core\Migrador.Core.csproj" />
+    <ProjectReference Include="..\Migrador.Package\Migrador.Package.csproj" />
+    <ProjectReference Include="..\Migrador.Parsers.Export\Migrador.Parsers.Export.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+</Project>

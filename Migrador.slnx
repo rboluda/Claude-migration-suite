@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Migrador.App/Migrador.App.csproj" />
+    <Project Path="src/Migrador.ClaudeCode/Migrador.ClaudeCode.csproj" />
+    <Project Path="src/Migrador.Core/Migrador.Core.csproj" />
+    <Project Path="src/Migrador.Package/Migrador.Package.csproj" />
+    <Project Path="src/Migrador.Parsers.Export/Migrador.Parsers.Export.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Migrador.Tests/Migrador.Tests.csproj" />
+  </Folder>
+</Solution>

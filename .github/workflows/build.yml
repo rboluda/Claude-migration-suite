@@ -1,0 +1,79 @@
+# Compila y prueba Migrador en cada push / pull request.
+# Al subir una etiqueta vX.Y.Z (p. ej. "git tag v0.2.0 && git push origin v0.2.0") además crea la Release de
+# GitHub con el ejecutable y SHA256SUMS.txt, que es lo que lee el actualizador de la app.
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # necesario para crear la Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Versión
+        id: ver
+        shell: pwsh
+        run: |
+          # En una etiqueta vX.Y.Z la versión sale de la etiqueta; si no, la de Directory.Build.props.
+          if ($env:GITHUB_REF_TYPE -eq 'tag') { $v = $env:GITHUB_REF_NAME.TrimStart('v') }
+          else { $v = ([xml](Get-Content Directory.Build.props)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1 }
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Pruebas
+        run: dotnet test tests/Migrador.Tests/Migrador.Tests.csproj -c Release
+
+      - name: Compilar
+        run: dotnet publish src/Migrador.App/Migrador.App.csproj -c Release -o publish -p:Version=${{ steps.ver.outputs.version }}
+
+      - name: Preparar archivos
+        shell: pwsh
+        run: |
+          $v = '${{ steps.ver.outputs.version }}'
+          New-Item -ItemType Directory dist | Out-Null
+          Copy-Item publish/Migrador.exe "dist/Migrador-$v.exe"
+          Get-ChildItem dist -File | ForEach-Object {
+            "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower())  $($_.Name)"
+          } | Out-File dist/SHA256SUMS.txt -Encoding ascii
+          Get-ChildItem dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Migrador-${{ steps.ver.outputs.version }}
+          path: dist/*
+
+      - name: Crear Release
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $v = '${{ steps.ver.outputs.version }}'
+          $notes = @"
+          **Descarga [Migrador-$v.exe](https://github.com/${{ github.repository }}/releases/download/v$v/Migrador-$v.exe)** y ábrelo. No hace falta instalar nada: es un único ejecutable que incluye .NET.
+          Si ya tienes Migrador, se actualiza solo.
+
+          Si Windows muestra «Windows protegió su PC», pulsa «Más información» → «Ejecutar de todas formas» (el ejecutable no está firmado digitalmente).
+
+          ---
+
+          **Download [Migrador-$v.exe](https://github.com/${{ github.repository }}/releases/download/v$v/Migrador-$v.exe)** and open it. Nothing else to install: it is a single executable that includes .NET.
+          If you already have Migrador, it updates itself.
+          "@
+          $files = (Get-ChildItem dist -File).FullName
+          # Si la Release ya existe (etiqueta movida y vuelta a subir), solo se sustituyen sus archivos.
+          gh release view $env:GITHUB_REF_NAME *> $null
+          if ($LASTEXITCODE -eq 0) { gh release upload $env:GITHUB_REF_NAME $files --clobber }
+          else { gh release create $env:GITHUB_REF_NAME $files --title "Migrador $v" --notes $notes }

@@ -1,0 +1,312 @@
+<Window
+    x:Class="Migrador.App.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:l="clr-namespace:Migrador.App.Controls"
+    xmlns:vm="clr-namespace:Migrador.App.ViewModels"
+    Title="{Binding WindowTitle}"
+    Width="1280" Height="800" MinWidth="900" MinHeight="500"
+    WindowStartupLocation="CenterScreen"
+    Closing="OnClosing">
+
+    <Window.InputBindings>
+        <KeyBinding Key="I" Modifiers="Control" Command="{Binding ImportExportCommand}" />
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding OpenCloCommand}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCloCommand}" />
+    </Window.InputBindings>
+
+    <Window.Resources>
+        <!-- Reader: one template per kind of item. -->
+        <DataTemplate DataType="{x:Type vm:Placeholder}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="32" MaxWidth="720" HorizontalAlignment="Left">
+                    <TextBlock Style="{StaticResource Heading}" Text="{Binding Title}" />
+                    <TextBlock Margin="0,12,0,0" Style="{StaticResource Muted}" Text="{Binding Text}" />
+                </StackPanel>
+            </ScrollViewer>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ConversationReader}">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Margin="24,20,24,8">
+                    <TextBlock Style="{StaticResource Heading}" Text="{Binding Title}" />
+                    <TextBlock Margin="0,4,0,0" Style="{StaticResource Muted}" Text="{Binding Info}" />
+                    <TextBlock Margin="0,2,0,0" Style="{StaticResource Muted}" Text="{Binding FidelityText}" />
+                    <Border Margin="0,8,0,0" Padding="10,6" CornerRadius="4" Background="#33F0A030"
+                            Visibility="{Binding Warning, Converter={StaticResource NotNullToVisibility}}">
+                        <TextBlock TextWrapping="Wrap" Text="{Binding Warning}" />
+                    </Border>
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Messages}"
+                              VirtualizingPanel.IsVirtualizing="True"
+                              VirtualizingPanel.ScrollUnit="Pixel"
+                              ScrollViewer.CanContentScroll="True">
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Padding="24,0,24,24">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:MessageView}">
+                            <Border x:Name="Card" Margin="0,6" Padding="14,10" CornerRadius="6" Background="#0C808080">
+                                <StackPanel>
+                                    <DockPanel>
+                                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal"
+                                                    Visibility="{Binding HasBranches, Converter={StaticResource BoolToVisibility}}">
+                                            <Button Padding="8,0" Content="‹" Command="{Binding PreviousCommand}" ToolTip="{l:T 'Versión anterior'}" />
+                                            <TextBlock Margin="8,0" VerticalAlignment="Center" Style="{StaticResource Muted}" Text="{Binding BranchText}" />
+                                            <Button Padding="8,0" Content="›" Command="{Binding NextCommand}" ToolTip="{l:T 'Versión siguiente'}" />
+                                        </StackPanel>
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run FontWeight="SemiBold" Text="{Binding Role, Mode=OneWay}" />
+                                            <Run Text="  " />
+                                            <Run Text="{Binding Date, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </DockPanel>
+                                    <TextBox Margin="0,6,0,0" Style="{StaticResource ReadOnlyText}" Text="{Binding Text, Mode=OneWay}" />
+                                    <ItemsControl Margin="0,6,0,0" ItemsSource="{Binding Items}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource Muted}" Text="{Binding}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Expander Margin="0,6,0,0" Header="{l:T 'Otros bloques (razonamiento, herramientas)'}"
+                                              Visibility="{Binding OtherBlocks.Count, Converter={StaticResource CountToVisibility}}">
+                                        <ItemsControl ItemsSource="{Binding OtherBlocks}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Margin="0,4" Style="{StaticResource ReadOnlyText}" Opacity="0.75" Text="{Binding Mode=OneWay}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Expander>
+                                </StackPanel>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsHuman}" Value="True">
+                                    <Setter TargetName="Card" Property="Background" Value="#1A3B82F6" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ProjectReader}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="24,20">
+                    <TextBlock Style="{StaticResource Heading}" Text="{Binding Title}" />
+                    <TextBlock Margin="0,4,0,0" Style="{StaticResource Muted}" Text="{Binding Info}" />
+                    <TextBlock Margin="0,2,0,0" Style="{StaticResource Muted}" Text="{Binding FidelityText}" />
+                    <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" Text="{Binding Description}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Instrucciones'}" />
+                    <TextBox Style="{StaticResource ReadOnlyText}" Text="{Binding Instructions, Mode=OneWay}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Documentos'}" />
+                    <ItemsControl ItemsSource="{Binding Documents}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:DocumentView}">
+                                <Expander Margin="0,4">
+                                    <Expander.Header>
+                                        <TextBlock>
+                                            <Run FontWeight="SemiBold" Text="{Binding FileName, Mode=OneWay}" />
+                                            <Run Text="  ·  " />
+                                            <Run Text="{Binding Fidelity, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </Expander.Header>
+                                    <TextBox Margin="0,6" Style="{StaticResource ReadOnlyText}" Text="{Binding Content, Mode=OneWay}" />
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ClaudeCodeReader}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="24,20">
+                    <TextBlock Style="{StaticResource Heading}" Text="{Binding Title}" />
+                    <TextBlock Margin="0,4,0,0" Style="{StaticResource Muted}" Text="{Binding Info}" />
+                    <Border Margin="0,10,0,0" Padding="10,6" CornerRadius="4" Background="#33F0A030">
+                        <TextBlock TextWrapping="Wrap" Text="{Binding CleanupWarning}" />
+                    </Border>
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Contenido'}" />
+                    <ItemsControl ItemsSource="{Binding Kinds}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Proyectos'}" />
+                    <ItemsControl ItemsSource="{Binding Projects}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:CodeProjectView}">
+                                <StackPanel Margin="0,4">
+                                    <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding Title}" />
+                                    <TextBlock Style="{StaticResource Muted}" Text="{Binding Details}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Expander Margin="0,16,0,0" Header="{Binding ExcludedTitle}">
+                        <ItemsControl Margin="0,6" ItemsSource="{Binding Excluded}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource Muted}" Text="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Expander>
+                </StackPanel>
+            </ScrollViewer>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:LossReader}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="24,20" MaxWidth="760" HorizontalAlignment="Left">
+                    <TextBlock Style="{StaticResource Heading}" Text="{Binding Title}" />
+                    <TextBlock Margin="0,4,0,0" FontWeight="SemiBold" Text="{Binding Level}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Dónde estaba'}" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Where}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Qué queda'}" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Remains}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Qué se pierde'}" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Lost}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Qué no se sabe'}" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Unknown}" />
+                    <TextBlock Style="{StaticResource Subheading}" Text="{l:T 'Impacto'}" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Impact}" />
+                    <ItemsControl Margin="0,6,0,0" ItemsSource="{Binding Mentions}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="0,3" Style="{StaticResource Muted}" Text="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </DataTemplate>
+    </Window.Resources>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{l:T '_Archivo'}">
+                <MenuItem Header="{l:T 'Importar export…'}" InputGestureText="Ctrl+I" Command="{Binding ImportExportCommand}" />
+                <MenuItem Header="{l:T 'Abrir .clo…'}" InputGestureText="Ctrl+O" Command="{Binding OpenCloCommand}" />
+                <MenuItem Header="{l:T 'Guardar como .clo…'}" InputGestureText="Ctrl+S" Command="{Binding SaveCloCommand}" />
+                <Separator />
+                <MenuItem Header="{l:T 'Añadir Claude Code de este equipo'}" Command="{Binding AddClaudeCodeCommand}" />
+                <Separator />
+                <MenuItem Header="{l:T 'Ajustes…'}" Command="{Binding OpenSettingsCommand}" />
+                <Separator />
+                <MenuItem Header="{l:T 'Salir'}" Command="{Binding ExitCommand}" />
+            </MenuItem>
+            <MenuItem Header="{l:T 'A_yuda'}">
+                <MenuItem Header="{l:T 'Buscar actualizaciones'}" Command="{Binding CheckUpdatesCommand}" />
+                <MenuItem Header="{l:T 'Página del proyecto en GitHub'}" Command="{Binding OpenProjectPageCommand}" />
+                <Separator />
+                <MenuItem Header="{l:T 'Acerca de Migrador'}" Command="{Binding ShowAboutCommand}" />
+            </MenuItem>
+        </Menu>
+
+        <Border DockPanel.Dock="Top" Padding="12,6" Background="#223B82F6"
+                Visibility="{Binding UpdateMessage, Converter={StaticResource NotNullToVisibility}}">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Margin="8,0,0,0" Padding="10,2" Content="{l:T 'Descargar e instalar'}" Command="{Binding DownloadUpdateCommand}"
+                            Visibility="{Binding CanDownloadUpdate, Converter={StaticResource BoolToVisibility}}" />
+                    <Button Margin="8,0,0,0" Padding="10,2" Content="{l:T 'Reiniciar ahora'}" Command="{Binding RestartToUpdateCommand}"
+                            Visibility="{Binding CanRestartToUpdate, Converter={StaticResource BoolToVisibility}}" />
+                </StackPanel>
+                <TextBlock VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding UpdateMessage}" />
+            </DockPanel>
+        </Border>
+
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <ProgressBar Width="80" Height="10" IsIndeterminate="True"
+                             Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Status}" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" MinWidth="160" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="360" MinWidth="220" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="320" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Navigation -->
+            <DockPanel Grid.Column="0" Margin="8">
+                <TextBlock DockPanel.Dock="Bottom" Margin="4,8" FontSize="11" Style="{StaticResource Muted}" Text="{Binding Summary}" />
+                <ListBox ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}" BorderThickness="0" Background="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:NavItem}">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Muted}" Text="{Binding Count}" />
+                                <TextBlock Text="{Binding Label}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Transparent" />
+
+            <!-- List -->
+            <DockPanel Grid.Column="2" Margin="0,8">
+                <Grid DockPanel.Dock="Top" Margin="0,0,0,8">
+                    <TextBox x:Name="Search" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=250}" />
+                    <TextBlock Margin="10,0" VerticalAlignment="Center" IsHitTestVisible="False" Style="{StaticResource Muted}"
+                               Text="{l:T 'Buscar en todo el texto (sin distinguir tildes ni mayúsculas)'}">
+                        <TextBlock.Visibility>
+                            <Binding ElementName="Search" Path="Text.Length" Converter="{StaticResource ZeroToVisible}" />
+                        </TextBlock.Visibility>
+                    </TextBlock>
+                </Grid>
+                <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+                         VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:ListItem}">
+                            <DockPanel Margin="0,3">
+                                <Border DockPanel.Dock="Right" Margin="8,0,0,0" Padding="6,1" CornerRadius="3" VerticalAlignment="Top"
+                                        Background="#33F0A030" Visibility="{Binding Badge, Converter={StaticResource NotNullToVisibility}}">
+                                    <TextBlock FontSize="11" Text="{Binding Badge}" />
+                                </Border>
+                                <StackPanel>
+                                    <TextBlock FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Text="{Binding Title}" />
+                                    <TextBlock FontSize="12" Style="{StaticResource Muted}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Text="{Binding Subtitle}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+            <GridSplitter Grid.Column="3" Width="4" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Transparent" />
+
+            <!-- Reader -->
+            <ContentControl Grid.Column="4" Content="{Binding Reader}" />
+        </Grid>
+    </DockPanel>
+</Window>

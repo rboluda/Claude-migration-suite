@@ -1,0 +1,27 @@
+<Window
+    x:Class="Migrador.App.Views.AboutWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:l="clr-namespace:Migrador.App.Controls"
+    Title="{l:T 'Acerca de Migrador'}"
+    Width="520" SizeToContent="Height" ResizeMode="NoResize"
+    WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <StackPanel Margin="24">
+        <TextBlock FontSize="26" FontWeight="SemiBold" Text="Migrador" />
+        <TextBlock Style="{StaticResource Muted}" Text="{Binding Version}" />
+        <TextBlock Margin="0,12,0,0" TextWrapping="Wrap"
+                   Text="{l:T 'Guarda todo el contenido de una cuenta en un único archivo .clo, sin resumir nada, y te ayuda a llevarlo a otra cuenta.'}" />
+        <TextBlock Margin="0,12,0,0" TextWrapping="Wrap">
+            <Run Text="{l:T 'Creado por '}" /><Hyperlink Command="{Binding OpenAuthorCommand}"><Run Text="{Binding Author, Mode=OneWay}" /></Hyperlink>
+        </TextBlock>
+        <TextBlock Style="{StaticResource Muted}" Text="{Binding Copyright}" />
+        <TextBlock Margin="0,12,0,0" Style="{StaticResource Muted}"
+                   Text="{l:T 'Sin telemetría: todo se procesa en tu equipo. Solo se conecta a GitHub para buscar actualizaciones.'}" />
+        <WrapPanel Margin="0,20,0,0">
+            <Button Margin="0,0,8,8" Padding="12,4" Content="{l:T 'Mi GitHub'}" Command="{Binding OpenAuthorCommand}" />
+            <Button Margin="0,0,8,8" Padding="12,4" Content="{l:T 'Código y novedades'}" Command="{Binding OpenRepositoryCommand}" />
+            <Button Margin="0,0,8,8" Padding="12,4" Content="{l:T 'Avisar de un problema'}" Command="{Binding ReportIssueCommand}" />
+        </WrapPanel>
+        <Button Margin="0,12,0,0" MinWidth="96" HorizontalAlignment="Right" IsCancel="True" IsDefault="True" Content="{l:T 'Cerrar'}" />
+    </StackPanel>
+</Window>

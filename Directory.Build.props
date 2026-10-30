@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Versión: se cambia aquí (o con -p:Version=x.y.z, que es lo que hace el workflow de GitHub). -->
+    <Version>0.1.0</Version>
+    <Product>Migrador</Product>
+    <Authors>rboluda</Authors>
+    <Company>rboluda</Company>
+    <Copyright>© 2026 rboluda</Copyright>
+    <NeutralLanguage>es-ES</NeutralLanguage>
+  </PropertyGroup>
+</Project>

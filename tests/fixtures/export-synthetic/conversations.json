@@ -1,0 +1,122 @@
+[
+  {
+    "uuid": "c0000000-0000-4000-8000-000000000001",
+    "name": "Receta de tortilla",
+    "summary": "",
+    "created_at": "2025-03-01T10:00:00.000000Z",
+    "updated_at": "2025-03-01T10:05:00.000000Z",
+    "is_starred": true,
+    "account": { "uuid": "a0000000-0000-4000-8000-000000000001" },
+    "chat_messages": [
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000001",
+        "text": "¿Cuántos huevos lleva una tortilla para cuatro? Te adjunto la receta y una foto.",
+        "content": [
+          { "type": "text", "text": "¿Cuántos huevos lleva una tortilla para cuatro? Te adjunto la receta y una foto.", "start_timestamp": "2025-03-01T10:00:00.000000Z", "stop_timestamp": "2025-03-01T10:00:00.000000Z", "citations": [] }
+        ],
+        "sender": "human",
+        "created_at": "2025-03-01T10:00:00.000000Z",
+        "updated_at": "2025-03-01T10:00:00.000000Z",
+        "attachments": [
+          { "file_name": "receta.pdf", "file_size": 20480, "file_type": "application/pdf", "extracted_content": "Tortilla: 6 huevos, 4 patatas, 1 cebolla." },
+          { "file_name": "notas.txt", "file_size": 42, "file_type": "text/plain", "extracted_content": "Mejor con cebolla.\nPoco hecha." }
+        ],
+        "files": [
+          { "file_name": "foto-tortilla.jpg" }
+        ]
+      },
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000002",
+        "text": "Para cuatro personas, 6 huevos.",
+        "content": [
+          { "type": "text", "text": "Para cuatro personas, 6 huevos.", "citations": [] }
+        ],
+        "sender": "assistant",
+        "created_at": "2025-03-01T10:00:10.000000Z",
+        "updated_at": "2025-03-01T10:00:10.000000Z",
+        "attachments": [],
+        "files": []
+      }
+    ]
+  },
+  {
+    "uuid": "c0000000-0000-4000-8000-000000000002",
+    "name": "Plan de viaje",
+    "summary": "Viaje de fin de semana",
+    "created_at": "2025-04-10T08:00:00.000000Z",
+    "updated_at": "2025-04-10T09:00:00.000000Z",
+    "project_uuid": "p0000000-0000-4000-8000-000000000001",
+    "current_leaf_message_uuid": "m0000000-0000-4000-8000-000000000014",
+    "chat_messages": [
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000011",
+        "parent_message_uuid": "00000000-0000-4000-8000-000000000000",
+        "text": "Quiero ir a Valencia un fin de semana.",
+        "content": [ { "type": "text", "text": "Quiero ir a Valencia un fin de semana." } ],
+        "sender": "human",
+        "created_at": "2025-04-10T08:00:00.000000Z",
+        "updated_at": "2025-04-10T08:00:00.000000Z",
+        "attachments": [],
+        "files": []
+      },
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000012",
+        "parent_message_uuid": "m0000000-0000-4000-8000-000000000011",
+        "text": "Buena idea. ¿En qué fechas?",
+        "content": [
+          { "type": "thinking", "thinking": "Preguntar fechas." },
+          { "type": "text", "text": "Buena idea. ¿En qué fechas?" }
+        ],
+        "sender": "assistant",
+        "created_at": "2025-04-10T08:00:05.000000Z",
+        "updated_at": "2025-04-10T08:00:05.000000Z",
+        "attachments": [],
+        "files": []
+      },
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000013",
+        "parent_message_uuid": "m0000000-0000-4000-8000-000000000012",
+        "text": "En mayo.",
+        "content": [ { "type": "text", "text": "En mayo." } ],
+        "sender": "human",
+        "created_at": "2025-04-10T08:01:00.000000Z",
+        "updated_at": "2025-04-10T08:01:00.000000Z",
+        "attachments": [],
+        "files": []
+      },
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000015",
+        "parent_message_uuid": "m0000000-0000-4000-8000-000000000013",
+        "text": "Mayo es buena época: hace calor sin agobiar.",
+        "content": [ { "type": "text", "text": "Mayo es buena época: hace calor sin agobiar." } ],
+        "sender": "assistant",
+        "created_at": "2025-04-10T08:01:05.000000Z",
+        "updated_at": "2025-04-10T08:01:05.000000Z",
+        "attachments": [],
+        "files": []
+      },
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000016",
+        "parent_message_uuid": "m0000000-0000-4000-8000-000000000012",
+        "text": "En junio, mejor.",
+        "content": [ { "type": "text", "text": "En junio, mejor." } ],
+        "sender": "human",
+        "created_at": "2025-04-10T08:30:00.000000Z",
+        "updated_at": "2025-04-10T08:30:00.000000Z",
+        "attachments": [],
+        "files": []
+      },
+      {
+        "uuid": "m0000000-0000-4000-8000-000000000014",
+        "parent_message_uuid": "m0000000-0000-4000-8000-000000000016",
+        "text": "En junio ya hay fiestas en la playa.",
+        "content": [ { "type": "text", "text": "En junio ya hay fiestas en la playa." } ],
+        "sender": "assistant",
+        "created_at": "2025-04-10T08:30:05.000000Z",
+        "updated_at": "2025-04-10T08:30:05.000000Z",
+        "attachments": [],
+        "files": []
+      }
+    ]
+  }
+]
