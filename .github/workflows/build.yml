@@ -17,9 +17,9 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -44,9 +44,11 @@ jobs:
           $v = '${{ steps.ver.outputs.version }}'
           New-Item -ItemType Directory dist | Out-Null
           Copy-Item publish/Migrador.exe "dist/Migrador-$v.exe"
-          Get-ChildItem dist -File | ForEach-Object {
+          # La lista se toma antes de crear SHA256SUMS.txt: si no, Get-ChildItem lo encuentra abierto e intenta hashearlo.
+          $sums = Get-ChildItem dist -File | ForEach-Object {
             "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower())  $($_.Name)"
-          } | Out-File dist/SHA256SUMS.txt -Encoding ascii
+          }
+          $sums | Out-File dist/SHA256SUMS.txt -Encoding ascii
           Get-ChildItem dist
 
       - uses: actions/upload-artifact@v4
