@@ -15,6 +15,7 @@
             <Run Text="{l:T 'Creado por '}" /><Hyperlink Command="{Binding OpenAuthorCommand}"><Run Text="{Binding Author, Mode=OneWay}" /></Hyperlink>
         </TextBlock>
         <TextBlock Style="{StaticResource Muted}" Text="{Binding Copyright}" />
+        <TextBlock Style="{StaticResource Muted}" Text="{l:T 'Software libre y de código abierto bajo la licencia MIT.'}" />
         <TextBlock Margin="0,12,0,0" Style="{StaticResource Muted}"
                    Text="{l:T 'Sin telemetría: todo se procesa en tu equipo. Solo se conecta a GitHub para buscar actualizaciones.'}" />
         <WrapPanel Margin="0,20,0,0">

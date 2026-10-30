@@ -33,9 +33,9 @@ dotnet test tests/Migrador.Tests
 dotnet publish src/Migrador.App -c Release -o publish
 ```
 
-## Autor
+## Autor y licencia
 
-[rboluda](https://github.com/rboluda)
+Creado por [rboluda](https://github.com/rboluda). Software libre y de código abierto bajo la [licencia MIT](LICENSE).
 
 ---
 
@@ -52,3 +52,5 @@ Windows desktop app that saves **all** the content of a claude.ai account in a s
 **Privacy:** everything is processed locally, no telemetry. The only connection is the update check against the public GitHub API (at most once a day), and the download of new versions, verified by SHA-256. Both can be turned off in *File → Settings*.
 
 **Download:** `Migrador-x.y.z.exe` from the [latest release](https://github.com/rboluda/Claude-migration-suite/releases/latest).
+
+**Author and license:** created by [rboluda](https://github.com/rboluda). Free and open-source software under the [MIT license](LICENSE).

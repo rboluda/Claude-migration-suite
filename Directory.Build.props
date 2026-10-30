@@ -9,7 +9,8 @@
     <Product>Migrador</Product>
     <Authors>rboluda</Authors>
     <Company>rboluda</Company>
-    <Copyright>© 2026 rboluda</Copyright>
+    <Copyright>© 2026 rboluda · MIT</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>es-ES</NeutralLanguage>
   </PropertyGroup>
 </Project>

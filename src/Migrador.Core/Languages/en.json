@@ -118,6 +118,7 @@
   "Sin guardar": "Unsaved",
   "Sin telemetría: todo se procesa en tu equipo. Solo se conecta a GitHub para buscar actualizaciones.": "No telemetry: everything is processed on your computer. It only connects to GitHub to check for updates.",
   "Skills": "Skills",
+  "Software libre y de código abierto bajo la licencia MIT.": "Free and open-source software under the MIT license.",
   "Solo la referencia: el nombre del archivo.": "Only the reference: the file name.",
   "Solo se consulta GitHub; no se envía nada tuyo. Cada versión se comprueba con su SHA-256 antes de instalarla.": "Only GitHub is contacted; nothing of yours is sent. Each version is checked against its SHA-256 before it is installed.",
   "También puedes añadir la carpeta de Claude Code de este equipo (Archivo → Añadir Claude Code de este equipo) o abrir un .clo que ya tengas.": "You can also add the Claude Code folder of this computer (File → Add Claude Code from this computer) or open a .clo you already have.",
