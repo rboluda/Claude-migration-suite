@@ -69,10 +69,14 @@ jobs:
 
           Si Windows muestra «Windows protegió su PC», pulsa «Más información» → «Ejecutar de todas formas» (el ejecutable no está firmado digitalmente).
 
+          [Manual](https://github.com/${{ github.repository }}/blob/v$v/docs/manual.md) · [Novedades](https://github.com/${{ github.repository }}/blob/v$v/CHANGELOG.md)
+
           ---
 
           **Download [Migrador-$v.exe](https://github.com/${{ github.repository }}/releases/download/v$v/Migrador-$v.exe)** and open it. Nothing else to install: it is a single executable that includes .NET.
           If you already have Migrador, it updates itself.
+
+          [User guide](https://github.com/${{ github.repository }}/blob/v$v/docs/manual.en.md) · [Changelog](https://github.com/${{ github.repository }}/blob/v$v/CHANGELOG.md)
           "@
           $files = (Get-ChildItem dist -File).FullName
           # Si la Release ya existe (etiqueta movida y vuelta a subir), solo se sustituyen sus archivos.

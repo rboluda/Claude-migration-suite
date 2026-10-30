@@ -23,7 +23,7 @@ public sealed partial class ConversationReader : ObservableObject
         {
             T("Creado {0}", Labels.Date(conversation.CreatedAt)),
             T("actualizado {0}", Labels.Date(conversation.UpdatedAt)),
-            T("{0} mensajes", conversation.Messages.Count),
+            Labels.Messages(conversation.Messages.Count),
             project is null ? null : T("proyecto «{0}»", project),
             _tree.HasBranches ? T("puntos con ramas: {0}", _tree.BranchPointCount) : null,
         }.OfType<string>());
@@ -94,7 +94,7 @@ public sealed record DocumentView(string FileName, string Fidelity, string Conte
 public sealed class ProjectReader(Project project)
 {
     public string Title { get; } = string.IsNullOrWhiteSpace(project.Name) ? T("(sin nombre)") : project.Name;
-    public string Info { get; } = string.Join(" · ", T("Creado {0}", Labels.Date(project.CreatedAt)), T("{0} documentos", project.Documents.Count));
+    public string Info { get; } = string.Join(" · ", T("Creado {0}", Labels.Date(project.CreatedAt)), Labels.Documents(project.Documents.Count));
     public string FidelityText { get; } = T("Fidelidad: {0}", Labels.Of(project.Fidelity()));
     public string? Description { get; } = project.Description;
     public string Instructions { get; } = project.Instructions ?? T("(sin instrucciones)");
@@ -124,7 +124,7 @@ public sealed class ClaudeCodeReader(ClaudeCodeSnapshot s)
             p.Path ?? T("{0} (ruta desconocida)", p.FolderName),
             string.Join(" · ", new[]
             {
-                T("{0} sesiones", p.SessionCount),
+                Labels.Count(p.SessionCount, T("{0} sesión", p.SessionCount), T("{0} sesiones", p.SessionCount)),
                 p.HasMemory ? T("con memoria") : null,
                 p.GitRemote,
                 T("última actividad {0}", Labels.Date(p.LastActivity)),
@@ -143,7 +143,7 @@ public sealed class LossReader
         Title = loss.Name;
         Level = T("Nivel: {0}", Labels.Of(loss.Item.Fidelity));
         Where = loss.Message is { } m
-            ? T("En «{0}», mensaje de {1} del {2}.", loss.Owner, Labels.Of(m.Role), Labels.Date(m.CreatedAt))
+            ? m.Role == MessageRole.Human ? T("En «{0}», en un mensaje tuyo del {1}.", loss.Owner, Labels.Date(m.CreatedAt)) : T("En «{0}», en una respuesta del {1}.", loss.Owner, Labels.Date(m.CreatedAt))
             : T("En el proyecto «{0}».", loss.Owner);
         (Remains, Lost) = loss.Item switch
         {
@@ -155,7 +155,7 @@ public sealed class LossReader
         Unknown = T("Si el original sigue en algún equipo o en la nube: se buscará en la siguiente fase (local → nube → tú).");
         Impact = loss.LaterMentions.Count == 0
             ? T("Ningún mensaje posterior lo menciona por su nombre.")
-            : T("{0} mensajes posteriores lo mencionan:", loss.LaterMentions.Count);
+            : Labels.Count(loss.LaterMentions.Count, T("Lo menciona un mensaje posterior:"), T("{0} mensajes posteriores lo mencionan:", loss.LaterMentions.Count));
         Mentions = loss.LaterMentions.Select(m => $"{Labels.Of(m.Role)} · {Labels.Date(m.CreatedAt)}: {Excerpt(m.Text, loss.Name)}").ToList();
     }
 

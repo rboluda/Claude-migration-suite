@@ -257,14 +257,14 @@ public sealed partial class MainViewModel : ObservableObject
                 .OrderByDescending(c => c.UpdatedAt ?? c.CreatedAt)
                 .Select(c => new ListItem(
                     string.IsNullOrWhiteSpace(c.Title) ? T("(sin título)") : c.Title,
-                    $"{Labels.Date(c.UpdatedAt ?? c.CreatedAt)} · {T("{0} mensajes", c.Messages.Count)}",
+                    $"{Labels.Date(c.UpdatedAt ?? c.CreatedAt)} · {Labels.Messages(c.Messages.Count)}",
                     c.Fidelity() is { Worst: not Fidelity.Original } f ? Labels.Of(f.Worst) : null,
                     c))
                 .ToList(),
             Section.Projects => _archive.Projects
                 .Where(p => Match(p.Name, p.Description, p.Instructions) || p.Documents.Any(d => Match(d.FileName, d.Content)))
                 .OrderBy(p => p.Name, StringComparer.CurrentCultureIgnoreCase)
-                .Select(p => new ListItem(p.Name, T("{0} documentos", p.Documents.Count),
+                .Select(p => new ListItem(p.Name, Labels.Documents(p.Documents.Count),
                     p.Fidelity() is { Worst: not Fidelity.Original } f ? Labels.Of(f.Worst) : null, p))
                 .ToList(),
             Section.ClaudeCode or Section.Machines => Machines()

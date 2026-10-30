@@ -5,6 +5,7 @@
     xmlns:l="clr-namespace:Migrador.App.Controls"
     xmlns:vm="clr-namespace:Migrador.App.ViewModels"
     Title="{Binding WindowTitle}"
+    Icon="/Assets/Migrador.ico"
     Width="1280" Height="800" MinWidth="900" MinHeight="500"
     WindowStartupLocation="CenterScreen"
     Closing="OnClosing">
@@ -257,7 +258,8 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:NavItem}">
                             <DockPanel>
-                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Muted}" Text="{Binding Count}" />
+                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Muted}" Text="{Binding Count}"
+                                           Visibility="{Binding Count, Converter={StaticResource CountToVisibility}}" />
                                 <TextBlock Text="{Binding Label}" />
                             </DockPanel>
                         </DataTemplate>
@@ -271,7 +273,8 @@
             <DockPanel Grid.Column="2" Margin="0,8">
                 <Grid DockPanel.Dock="Top" Margin="0,0,0,8">
                     <TextBox x:Name="Search" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=250}" />
-                    <TextBlock Margin="10,0" VerticalAlignment="Center" IsHitTestVisible="False" Style="{StaticResource Muted}"
+                    <TextBlock Margin="10,0" VerticalAlignment="Center" IsHitTestVisible="False" Opacity="0.7"
+                               TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
                                Text="{l:T 'Buscar en todo el texto (sin distinguir tildes ni mayúsculas)'}">
                         <TextBlock.Visibility>
                             <Binding ElementName="Search" Path="Text.Length" Converter="{StaticResource ZeroToVisible}" />

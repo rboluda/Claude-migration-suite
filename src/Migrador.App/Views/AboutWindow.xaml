@@ -4,11 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:l="clr-namespace:Migrador.App.Controls"
     Title="{l:T 'Acerca de Migrador'}"
+    Icon="/Assets/Migrador.ico"
     Width="520" SizeToContent="Height" ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <StackPanel Margin="24">
-        <TextBlock FontSize="26" FontWeight="SemiBold" Text="Migrador" />
-        <TextBlock Style="{StaticResource Muted}" Text="{Binding Version}" />
+        <DockPanel>
+            <Image DockPanel.Dock="Left" Width="56" Height="56" Margin="0,0,16,0" Source="/Assets/Migrador.ico" />
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock FontSize="26" FontWeight="SemiBold" Text="Migrador" />
+                <TextBlock Style="{StaticResource Muted}" Text="{Binding Version}" />
+            </StackPanel>
+        </DockPanel>
         <TextBlock Margin="0,12,0,0" TextWrapping="Wrap"
                    Text="{l:T 'Guarda todo el contenido de una cuenta en un único archivo .clo, sin resumir nada, y te ayuda a llevarlo a otra cuenta.'}" />
         <TextBlock Margin="0,12,0,0" TextWrapping="Wrap">

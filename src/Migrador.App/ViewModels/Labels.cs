@@ -42,6 +42,13 @@ public static class Labels
             ? T("Original")
             : string.Join(" · ", s.Counts.OrderByDescending(c => c.Key).Select(c => $"{Of(c.Key)} ({c.Value})"));
 
+    /// <summary>"1 mensaje" / "3 mensajes": both forms come already translated.</summary>
+    public static string Count(int n, string one, string many) => n == 1 ? one : many;
+
+    public static string Messages(int n) => Count(n, T("{0} mensaje", n), T("{0} mensajes", n));
+
+    public static string Documents(int n) => Count(n, T("{0} documento", n), T("{0} documentos", n));
+
     public static string Date(DateTimeOffset? d) => d is { } v ? v.ToLocalTime().ToString("g", Culture) : T("sin fecha");
 
     public static string Size(long bytes)
