@@ -1,0 +1,22 @@
+# Exports reales: nunca al repositorio
+samples/*
+!samples/README.md
+*.clo
+*.clopart
+data-*.zip
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+publish/
+*.nupkg
+
+# IDE / SO
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
